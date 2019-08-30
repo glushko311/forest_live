@@ -19,7 +19,7 @@ def clear():
 def main():
     c = get_climate()
     w = World(c)
-    w.generate_world(10)
+    w.generate_world(25)
     w.add_plants([PoplarTree, OakTree, PineTree])
     i = 200
     while i:
@@ -27,8 +27,13 @@ def main():
         w.world_printer.print_forest(w)
 
         print("Turn number {}".format(i))
+        p1 = w.places[1]
+        if p1.plant is not None:
+            print("heigh_p1="+str(p1.plant.height))
+            print("leafs_p1="+str(p1.plant.leafs))
+
         w.next_turn()
-        sleep(0.3)
+        sleep(0.1)
         i -= 1
 
 

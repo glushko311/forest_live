@@ -1,15 +1,15 @@
 import random
 from typing import List
-from plant import Plant
 from mutator import PlantMutator
 
 
 class Place:
-    __slots__ = 'is_free', 'plant'
+    __slots__ = 'is_free', 'plant', 'world'
 
-    def __init__(self):
+    def __init__(self, world):
         self.is_free = True
         self.plant = None
+        self.world = world
 
     def delete_plant(self):
         self.plant = None
@@ -32,14 +32,13 @@ class World:
 
     def generate_world(self, size=30):
         for i in range(size):
-            self.places.append(Place())
+            self.places.append(Place(self))
 
     def add_plants(self, plant_types: List):
         for place in self.places:
 
             if random.choice(self.PLANT_DENSITY_MAP):
                 place.plant = random.choice(plant_types)(place)
-                # place.plant = PoplarTree(place)
                 place.is_free = False
 
     def get_near_places(self, place, radius=1) -> List[Place]:
@@ -56,12 +55,14 @@ class World:
         return near_places
 
     def next_turn(self):
+        self.climate.next_season()
         for place in self.places:
             if not place.is_free:
                 place.plant.grow()
-                place.plant.spread(self.get_near_places(place, place.plant.spread_radius), self.PLANT_MUTATOR)
-                if place.plant.age >= place.plant.die_age:
-                    place.delete_plant()
+                if not place.is_free:
+                    place.plant.spread(self.get_near_places(place, place.plant.spread_radius), self.PLANT_MUTATOR)
+                    if place.plant.age >= place.plant.die_age:
+                        place.delete_plant()
 
 
 class WorldPrinter:
@@ -72,7 +73,7 @@ class WorldPrinter:
         pos = ''
         if world.places:
             for place in world.places:
-                if place.is_free or place.plant.leafs <= level:
+                if place.is_free or place.plant.height <= level:
                     pos += '  {}  '.format(self.EMPTY_DELIMITER)
                 else:
                     pos += '  {}  '.format(place.plant.sign)
@@ -91,6 +92,7 @@ class WorldPrinter:
         forest = self._get_forest(world)
         for level in forest:
             print(level)
+
 
 class WorldException(Exception):
     pass

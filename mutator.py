@@ -18,9 +18,9 @@ class PlantMutator(AbstractMutator):
     """
     def mutate(self, entity: Plant, place):
         new_plant = copy.copy(entity)
-        new_plant.age = 1
+        new_plant.age = 0
         new_plant.leafs = 1
-        new_plant.roots = 1
+        new_plant.height = 1
         new_plant.grow_speed += (-1) ** (random.randint(1, 2)) * entity.grow_speed * entity.variability
         new_plant.die_age += (-1) ** (random.randint(1, 2)) * entity.die_age * entity.variability
         new_plant.place = place
