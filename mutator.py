@@ -2,7 +2,7 @@ import abc
 import copy
 import random
 
-from .plant import Plant
+from plant import Plant
 
 
 class AbstractMutator(metaclass=abc.ABCMeta):

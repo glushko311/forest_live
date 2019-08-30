@@ -1,8 +1,9 @@
 from os import name, system
 from time import sleep
 
-from plants.world import World, Place
-from plants.plant import PoplarTree, OakTree, PineTree
+from world import World, Place
+from plant import PoplarTree, OakTree, PineTree
+from conditions import Weather, Climate
 
 
 def clear():
@@ -16,11 +17,10 @@ def clear():
 
 
 def main():
-    w = World()
+    c = get_climate()
+    w = World(c)
     w.generate_world(10)
     w.add_plants([PoplarTree, OakTree, PineTree])
-    # w.places[4].plant = PoplarTree(w.places[4])
-    # w.places[4].is_free = False
     i = 200
     while i:
         clear()
@@ -30,6 +30,13 @@ def main():
         w.next_turn()
         sleep(0.3)
         i -= 1
+
+
+def get_climate():
+    summer = Weather('summer', 35, 22, 4, 2, 5, 1)
+    winter = Weather('winter', 10, 2, 10, 6, 8, 4)
+    climate = Climate('middle_europe', summer, winter)
+    return climate
 
 
 if __name__ == "__main__":

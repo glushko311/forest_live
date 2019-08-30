@@ -1,15 +1,14 @@
 import random
 from typing import List
-from .plant import Plant
-from .mutator import PlantMutator
+from plant import Plant
+from mutator import PlantMutator
+
 
 class Place:
-    __slots__ = 'is_free', 'sun', 'water', 'plant'
+    __slots__ = 'is_free', 'plant'
 
-    def __init__(self, sun, water):
+    def __init__(self):
         self.is_free = True
-        self.sun = sun
-        self.water = water
         self.plant = None
 
     def delete_plant(self):
@@ -21,28 +20,21 @@ class World:
     PLANT_DENSITY_MAP = (True, False)
     PLANT_MUTATOR = PlantMutator()
 
-    def __new__(cls):
+    def __new__(cls, climate):
         if not hasattr(cls, 'instance'):
             cls.instance = super(World, cls).__new__(cls)
         return cls.instance
 
-    def __init__(self):
+    def __init__(self, climate):
         self.places = []
         self.world_printer = WorldPrinter()
+        self.climate = climate
 
-    def generate_world(self, size=30, min_sun=20, max_sun=50, min_water=20, max_water=50):
-        delta_sun = max_sun - min_sun
-        if delta_sun <= 0:
-            raise WorldException("Not correct min or max sun")
-        delta_water = max_water - min_water
-        if delta_water <= 0:
-            raise WorldException("Not correct min or max water")
-        delta_sun_per_position = delta_sun / size
-        delta_water_per_position = delta_water / size
+    def generate_world(self, size=30):
         for i in range(size):
-            self.places.append(Place(int(i * delta_sun_per_position), int(i * delta_water_per_position)))
+            self.places.append(Place())
 
-    def add_plants(self, plant_types: List[Plant]):
+    def add_plants(self, plant_types: List):
         for place in self.places:
 
             if random.choice(self.PLANT_DENSITY_MAP):
