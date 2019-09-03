@@ -29,12 +29,6 @@ class Climate:
         self.active_season = next(self.seasons)
         return self.active_season
 
-
-
-
-
-
-
 # add to pytest
 # if __name__ == "__main__":
 #     summer = Weather('summer', 35, 22, 4, 2, 5, 1)

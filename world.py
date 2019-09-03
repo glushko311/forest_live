@@ -41,6 +41,13 @@ class World:
                 place.plant = random.choice(plant_types)(place)
                 place.is_free = False
 
+    def get_all_plants(self):
+        plants = []
+        for place in self.places:
+            if not place.is_free:
+                plants.append(place.plant)
+        return plants
+
     def get_near_places(self, place, radius=1) -> List[Place]:
         near_places = []
         place_index = self.places.index(place)
@@ -74,9 +81,9 @@ class WorldPrinter:
         if world.places:
             for place in world.places:
                 if place.is_free or place.plant.height <= level:
-                    pos += '  {}  '.format(self.EMPTY_DELIMITER)
+                    pos += '{} '.format(self.EMPTY_DELIMITER)
                 else:
-                    pos += '  {}  '.format(place.plant.sign)
+                    pos += '{} '.format(place.plant.sign)
         else:
             print("World haven't been generated yet.")
         return pos

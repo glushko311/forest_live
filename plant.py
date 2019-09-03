@@ -19,6 +19,30 @@ class Plant(AbstractPlant):
     MIN_GROW_SPEED = 1
     MAX_GROW_SPEED = 10
     SPREAD_RADIUS = 10
+    GROW_MATRIX = {
+            (0, 0, 0): (0.3, 0.2),
+            (2, 0, 0): (-0.5, 0),
+            (1, 0, 0): (-0.2, 0),
+            (0, 2, 0): (-0.3, -0.3),
+            (0, 1, 0): (-0.2, 0),
+            (1, 1, 0): (-0.5, 0),
+            (2, 1, 0): (-0.6, 0),
+            (2, 2, 0): (-0.6, -0.3),
+            (0, 0, 1): (0.4, 0.1),
+            (0, 0, 2): (0.5, 0),
+            (1, 0, 1): (0, 0.2),
+            (0, 1, 1): (0, 0),
+            (1, 1, 1): (0, 0),
+            (1, 2, 1): (-0.2, -0.2),
+            (2, 1, 1): (-0.4, 0),
+            (1, 0, 2): (0, 0.4),
+            (2, 0, 1): (0, 0.2),
+            (2, 0, 1): (0, 0.2),
+            (2, 0, 2): (0, 0.4),
+            (0, 2, 2): (0, 0),
+            (0, 1, 2): (0.1, 0.1),
+            (0, 2, 1): (0, 0),
+        }
 
     def __init__(self, place, grow_speed=2, spread_start_age=5):
         self.leafs = 1
@@ -36,29 +60,6 @@ class Plant(AbstractPlant):
     def grow(self):
         # key (water_cond_coef, wind_cond_coef, sun_cond_coef)
         # value (grow_leafs_speed, grow_height_speed)
-        grow_matrix = {
-            (0, 0, 0): (0.3, 0.2),
-            (2, 0, 0): (-0.5, 0),
-            (1, 0, 0): (-0.2, 0),
-            (0, 2, 0): (-0.3, -0.3),
-            (0, 1, 0): (-0.2, 0),
-            (1, 1, 0): (-0.5, 0),
-            (2, 1, 0): (-0.6, 0),
-            (2, 2, 0): (-0.6, -0.3),
-            (0, 0, 1): (0.4, 0.1),
-            (0, 0, 2): (0.5, 0),
-            (1, 0, 1): (0, 0.2),
-            (0, 1, 1): (0, 0),
-            (1, 1, 1): (0, 0),
-            (2, 1, 1): (-0.4, 0),
-            (1, 0, 2): (0, 0.4),
-            (2, 0, 1): (0, 0.2),
-            (2, 0, 1): (0, 0.2),
-            (2, 0, 2): (0, 0.4),
-            (0, 2, 2): (0, 0),
-            (0, 1, 2): (0.1, 0.1),
-            (0, 2, 1): (0, 0),
-        }
         self.age += 1
 
         conditions = self.place.world.climate.active_season.conditions
@@ -71,7 +72,7 @@ class Plant(AbstractPlant):
             self.place.is_free = True
             self.place.delete_plant()
         else:
-            grow_coeff_tuple = grow_matrix[key]
+            grow_coeff_tuple = self.GROW_MATRIX[key]
             self.leafs += self.grow_speed * grow_coeff_tuple[0]
             self.height += self.grow_speed / 5
 
@@ -142,7 +143,7 @@ class OakTree(Plant):
     __slots__ = 'plant_type'
     SPREAD_RADIUS = 3
     MIN_GROW_SPEED = 1
-    MAX_GROW_SPEED = 3
+    MAX_GROW_SPEED = 2
 
     def __init__(self, place, spread_start_age=10, plant_type="oak_tree"):
         super().__init__(place, spread_start_age)
@@ -163,6 +164,6 @@ class PineTree(Plant):
         super().__init__(place, spread_start_age)
         self.plant_type = plant_type
         self.grow_speed = 2
-        self.spread_start_age = 5
-        self.die_age = 20
+        self.spread_start_age = 2
+        self.die_age = 50
         self.sign = "A"

@@ -25,3 +25,15 @@ class PlantMutator(AbstractMutator):
         new_plant.die_age += (-1) ** (random.randint(1, 2)) * entity.die_age * entity.variability
         new_plant.place = place
         return new_plant
+
+    def fast_mutate(self):
+        pass
+
+    def recombination_mutate(self, entity1: Plant, entity2: Plant, place):
+        pass
+
+    def grow_matrix_mutate(self, entity: Plant):
+        pass
+
+    def grow_matrix_fast_mutate(self, entity: Plant):
+        pass
